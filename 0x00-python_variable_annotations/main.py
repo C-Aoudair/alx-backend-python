@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 
-element_length =  __import__('9-element_length').element_length
+safe_first_element =  __import__('100-safe_first_element').safe_first_element
 
-print(element_length.__annotations__)
-print(element_length({'name': 'aoudair', 'age': 25}))
-
-# don't forget to search for iterable and sequence
+print(safe_first_element.__annotations__)

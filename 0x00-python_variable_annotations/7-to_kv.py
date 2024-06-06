@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """ This module contains a function that takes a string and an int or float and
-    returns a tuple containing the string and the square of the int or float. """
+    returns a tuple containing the string and the square of the int or float.
+"""
 from typing import Union, Tuple
 
 

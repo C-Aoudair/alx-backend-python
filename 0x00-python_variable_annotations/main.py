@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 
-sum_list = __import__('5-sum_list').sum_list
+element_length =  __import__('9-element_length').element_length
 
-floats = [3.14, 1.11, 2.22]
-floats_sum = sum_list(floats)
-print(floats_sum == sum(floats))
-print(sum_list.__annotations__)
-print("sum_list(floats) returns {} which is a {}".format(floats_sum, type(floats_sum)))
+print(element_length.__annotations__)
+print(element_length({'name': 'aoudair', 'age': 25}))
+
+# don't forget to search for iterable and sequence

@@ -2,8 +2,9 @@
 """ Contains unit tests for utils.access_nested_map function"""
 
 import unittest
+from unittest.mock import patch
 from parameterized import parameterized
-from utils import access_nested_map
+from utils import access_nested_map, get_json
 
 
 class TestAccessNestedMap(unittest.TestCase):
@@ -28,3 +29,22 @@ class TestAccessNestedMap(unittest.TestCase):
     def test_access_nested_map_exception(self, name, a, b):
         with self.assertRaises(KeyError):
             access_nested_map(a, b)
+
+
+class TestGetJson(unittest.TestCase):
+    """Test the utils.get_json method."""
+
+    @parameterized.expand(
+        [
+            ("case1", "http://example.com", {"payload": True}),
+            ("case2", "http://holberton.io", {"payload": False}),
+        ]
+    )
+    @patch('requests.get')
+    def test_get_json(self, name, url, payload, mock_get):
+        mock_response = payload
+        mock_get.return_value.json.return_value = mock_response
+
+        result = get_json(url)
+        self.assertEqual(result, mock_response)
+        mock_get.assert_called_once_with(url)

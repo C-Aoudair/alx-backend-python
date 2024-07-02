@@ -18,6 +18,7 @@ class TestAccessNestedMap(unittest.TestCase):
         ]
     )
     def test_access_nested_map(self, name, a, b, expected):
+        """ test access_nested_map function"""
         self.assertEqual(access_nested_map(a, b), expected)
 
     @parameterized.expand(
@@ -27,6 +28,7 @@ class TestAccessNestedMap(unittest.TestCase):
         ]
     )
     def test_access_nested_map_exception(self, name, a, b):
+        """ test case"""
         with self.assertRaises(KeyError):
             access_nested_map(a, b)
 
@@ -42,6 +44,7 @@ class TestGetJson(unittest.TestCase):
     )
     @patch('requests.get')
     def test_get_json(self, name, url, payload, mock_get):
+        """ test case"""
         mock_response = payload
         mock_get.return_value.json.return_value = mock_response
 
@@ -63,6 +66,7 @@ class TestMemoize(unittest.TestCase):
 
     @patch.object(TestClass, 'a_method')
     def test_memoize(self, mock_method):
+        """ test case"""
         mock_response = 42
         mock_method.return_value = mock_response
 

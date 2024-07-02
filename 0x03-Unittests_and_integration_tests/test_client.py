@@ -95,3 +95,20 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         client = GithubOrgClient("test_org")
         self.assertEqual(client.public_repos(), self.expected_repos)
         self.assertEqual(client.public_repos("apache-2.0"), self.apache2_repos)
+
+
+class TestGithubOrgClient(unittest.TestCase):
+    """ integration test """
+    @patch.object(GithubOrgClient, 'org', return_value=org_payload)
+    @patch.object(GithubOrgClient, 'repos_payload', return_value=repos_payload)
+    def test_public_repos(self, mock_repos_payload, mock_org):
+        client = GithubOrgClient("google")
+        result = client.public_repos()
+        self.assertEqual(result, expected_repos)
+
+    @patch.object(GithubOrgClient, 'org', return_value=org_payload)
+    @patch.object(GithubOrgClient, 'repos_payload', return_value=repos_payload)
+    def test_public_repos_with_license(self, mock_repos_payload, mock_org):
+        client = GithubOrgClient("google")
+        result = client.public_repos(license="apache-2.0")
+        self.assertEqual(result, apache2_repos)

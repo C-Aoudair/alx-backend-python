@@ -2,9 +2,10 @@
 """ Unit tests for client module units."""
 
 from client import GithubOrgClient
-from unittest.mock import patch, PropertyMock
-from parameterized import parameterized
+from unittest.mock import patch, PropertyMock, Mock
+from parameterized import parameterized, parameterized_class
 
+import fixtures
 import unittest
 
 
@@ -60,3 +61,37 @@ class TestGithubOrgClient(unittest.TestCase):
     def test_has_license(self, license, license_key, expected_result):
         result = GithubOrgClient.has_license(license, license_key)
         self.assertEqual(result, expected_result)
+
+
+@parameterized_class([
+    {"org_payload": fixtures.org_payload, "repos_payload": fixtures.repos_payload,
+     "expected_repos": fixtures.expected_repos, "apache2_repos": fixtures.apache2_repos}
+])
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """Integration test for GithubOrgClient.public_repos"""
+
+    @classmethod
+    def setUpClass(cls):
+        """Set up class method to patch requests.get"""
+        cls.get_patcher = patch('requests.get', side_effect=cls.mocked_requests_get)
+        cls.mock_get = cls.get_patcher.start()
+
+    @classmethod
+    def tearDownClass(cls):
+        """Tear down class method to stop the patcher"""
+        cls.get_patcher.stop()
+
+    @staticmethod
+    def mocked_requests_get(url, *args, **kwargs):
+        """Mock requests.get to return the appropriate fixture based on URL"""
+        if "orgs" in url:
+            return Mock(json=lambda: fixtures.org_payload)
+        if "repos" in url:
+            return Mock(json=lambda: fixtures.repos_payload)
+        return Mock(json=lambda: None)
+
+    def test_public_repos(self):
+        """Test public_repos method"""
+        client = GithubOrgClient("test_org")
+        self.assertEqual(client.public_repos(), self.expected_repos)
+        self.assertEqual(client.public_repos("apache-2.0"), self.apache2_repos)

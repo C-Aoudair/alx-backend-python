@@ -11,9 +11,9 @@ import unittest
 class TestGithubOrgClient(unittest.TestCase):
     """Unit test for client.GithubOrgClient class"""
 
-    @parameterized.expand([("case1", "google"), ("case2", "abc")])
+    @parameterized.expand([("google"), ("abc")])
     @patch("client.get_json")
-    def test_org(self, name, org_name, mock_get_json):
+    def test_org(self, org_name, mock_get_json):
         mock_response = {"name": org_name}
         mock_get_json.return_value = mock_response
         result = GithubOrgClient(org_name).org
@@ -52,3 +52,11 @@ class TestGithubOrgClient(unittest.TestCase):
 
             self.assertEqual(result, expected_result)
             mock_get_json.assert_called_once()
+
+    @parameterized.expand([
+        ({"license": {"key": "my_license"}}, "my_license", True),
+        ({"license": {"key": "other_license"}}, "my_license", False)
+    ])
+    def test_has_license(self, license, license_key, expected_result):
+        result = GithubOrgClient.has_license(license, license_key)
+        self.assertEqual(result, expected_result)
